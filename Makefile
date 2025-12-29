@@ -1,6 +1,6 @@
 NAME		= pipex
 
-SRC		= 
+SRC		= main.c 
 
 OBJ		= $(SRC:.c=.o)
 
