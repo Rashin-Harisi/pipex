@@ -1,6 +1,9 @@
 NAME		= pipex
 
-SRC		= main.c 
+SRC		= main.c \
+		helper_first.c \
+		helper_second.c \
+		multipipex.c
 
 OBJ		= $(SRC:.c=.o)
 

@@ -1,27 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   multipipex.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/12/30 18:02:17 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/12/30 17:48:24 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
 
-int main(int argc, char *argv[],char **envp)
+void	multipipex(int argc, char *argv[],char **envp)
 {
-	if (argc < 5)
-		return (write(2, "Usage: ./pipex infile cmd1 cmd2 outfile\n", 40));
-	if (ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc")) == 0)
+	int	pipe_fd[2];
+	int	fds[3]; //fds[0] = infile_fd, fds[1] = outfile_fd , fds[2] = pipe_in
+	int	i;
+	pid_t	child_pid;
+
+	file_opening(fds, argc, argv);
+	i = -1;
+	while (++i < argc - 3)
 	{
-		if (argc < 6)
-			return (write(2, "Usage: ./pipex here_doc LIMITER cmd1 cmd2 outfile\n", 50));
-		//append(argc, argv, envp);
+		if (i < argc - 4)
+			open_pipe(pipe_fd, fds);
+		child_pid = fork();
+		if (child_pid == -1)
+			exit_error("Fork Error", fds, pipe_fd);
+		if (child_pid == 0)
+		{
+			pipe_management(i, argc, fds, pipe_fd);
+			exec_cmd(i, argv, envp);
+		}
+		parent_pipe_management(fds, pipe_fd, argc, i);
 	}
-	else
-		multipipex(argc, argv, envp);
-	return (0);
+	close(fds[1]);
+	while (wait(NULL) > 0);
 }
