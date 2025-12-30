@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/12/30 17:48:24 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/12/30 20:13:59 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -30,7 +30,7 @@ void	multipipex(int argc, char *argv[],char **envp)
 		if (child_pid == 0)
 		{
 			pipe_management(i, argc, fds, pipe_fd);
-			exec_cmd(i, argv, envp);
+			exec_cmd(i, argv, envp, 2);
 		}
 		parent_pipe_management(fds, pipe_fd, argc, i);
 	}

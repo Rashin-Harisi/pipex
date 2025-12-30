@@ -1,147 +1,127 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonuc_append.c                                     :+:      :+:    :+:   */
+/*   append_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/12/30 16:06:26 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/12/30 21:09:51 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
 
-char	**find_paths(char **envp)
+char	*ft_strjoin_char(char *s1, char c)
 {
-	int	i;
-	char	*path;
-	char	**paths;
+	char	*new_str;
+	int		i;
+	int		len;
 
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i],"PATH=", 5) == 0)
-		{
-			path = envp[i] + 5;
-			paths = ft_split(path, ':');
-		}
-		i++;	  
-	}
-	return (paths);
+	if (!s1)
+		return (NULL);
+	len = ft_strlen(s1);
+	new_str = malloc(sizeof(char) * (len + 2));
+	if (!new_str)
+		return (NULL);
+	i = -1;
+	while (s1[++i])
+		new_str[i] = s1[i];
+	new_str[i] = c;
+	new_str[i + 1] = '\0';
+	free(s1);
+	return (new_str);
 }
 
-char	*check_access_pathname(char **paths, char *cmd)
-{
-	int	i;
-	char	*temp;
-	char	*pathname;
-
-	i = 0;
-	while (paths[i])
-	{
-		temp = ft_strjoin(paths[i], "/");
-		pathname = ft_strjoin(temp , cmd);
-		free(temp);
-		if (access(pathname, F_OK | X_OK) == 0)
-			return (pathname);
-		free(pathname);
-		i++;
-	}
-	return (NULL);
-}
-
-void free_array(char **s)
-{
-	int	i;
-
-	i = 0;
-	if (!s)
-		return ;
-	while (s[i])
-	{
-		free(s[i]);
-		i++;
-	}
-	free(s);
-}
-char	*get_first_command(int fd,char *limiter)
+void	get_first_command(int fd_read,char *limiter, int fd_write)
 {
 	char	buf[1];
 	char	*line;
 
-	line = ft_srtdup("");
-	while (read(fd, buf, 1) > 0)
+	line = ft_strdup("");
+	write(1, "codehere>", 9);
+	while (read(fd_read, buf, 1) > 0)
 	{
-		if (fd[0] == '\n')
+		if (buf[0] == '\n')
 		{
-			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+			if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
+				&& line[ft_strlen(limiter)] == '\0')
 			{
 				free(line);
 				break ;
 			}
-			write(fd, line, ft_strlen(line));
-			write(fd, "\n", 1);
+			write(fd_write, line, ft_strlen(line));
+			write(fd_write, "\n", 1);
 			free(line);
 			line = ft_strdup("");
+			write(1, "codehere>", 9);
 		}
 		else
-			line = ft_strjoin(line, buf[0]);
+			line = ft_strjoin_char(line, buf[0]);
 	}
 }
 
-int main(int argc, char *argv[],char **envp)
+void	pipe_management_append(int i, int argc, int *fds, int *pipe_fd)
+{
+	dup2(fds[2] , 0);
+	if (i < argc - 5)
+	{
+		dup2(pipe_fd[1], 1);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+	}
+	else
+		dup2(fds[1], 1);
+	close(fds[2]);
+	close(fds[1]);
+}
+
+void	parent_pipe_management_append(int *fds, int *pipe_fd, int argc, int i)
+{
+	close(fds[2]);
+	if (i < argc - 5)
+	{
+		close(pipe_fd[1]);
+		fds[2] = pipe_fd[0];
+	}
+}
+
+void	file_opening_append(int	*fds, char **argv, int argc)
 {
 	int	pipe_temp_fd[2];
+
+	fds[0] = 0;
+	open_pipe(pipe_temp_fd, fds);
+	get_first_command(fds[0],argv[2], pipe_temp_fd[1]);
+	close(pipe_temp_fd[1]);
+	fds[2] = pipe_temp_fd[0];
+	fds[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fds[1] == -1)
+		exit_error("File Opening Error", fds, NULL);
+}
+
+void	append(int argc, char *argv[],char **envp)
+{
 	int	pipe_fd[2];
 	pid_t	child_pid;
-	int	pipex;
-	int	infile_fd;
-	int	outfile_fd;
+	int	fds[3]; // fds[0] = infile_fd , fds[1]= outfile_fd , fds[2] =pipe_in
+	int	i;
 
-	if (argc < 5)
-		return (write(2, "Usage: ./pipex infile cmd1 cmd2 outfile\n", 40));
-	if (ft_strncmp(argv[1], "here_doc" ,ft_strlen("hero_doc")) == 0)
+	file_opening_append(fds,argv, argc);
+	i = -1;
+	while (++i < argc - 4)
 	{
-		infile_fd = 0;
-		first_cmd = get_first_cmd(infile_fd,argv[2]);
-		int temp_pipe = pipe(pipe_temp_fd);
-		if (temp_pipe == -1)
-			exit(1);
-		int pipex = pipe(pipe_fd);
-		if (pipex == -1)
-			exit(1);
-		child_first_pid = fork();
-		if (child_first_pid == 0)
+		if (i < argc - 5)
+			open_pipe(pipe_fd, fds);
+		child_pid = fork();
+		if (child_pid == -1)
+			exit_error("Fork Error", fds,pipe_fd);
+		if (child_pid == 0)
 		{
-			dup2(pipe_temp_fd[1], 0);
-			close(pipe_fd[0]);
-			dup2(pipe_fd[1],1);
-			close(pipe_fd[1]);
-			close(pipe_fd[0]);
-			char **cmds = ft_split(first_cmd, ' ');
-			char **paths = find_paths(envp);
-			char *pathname = check_access_pathname(paths , cmds[0]);
-			if (!pathname)
-			{
-				free_array(cmds);
-				free_array(paths);
-				write(2, "Command not found!\n", 19);
-				exit(127);
-			}
-			execve(pathname, cmds, envp);
-			free(pathname);
-			free_array(cmds);
-			free_array(paths);
-			exit(1);
+			pipe_management_append(i, argc, fds, pipe_fd);
+			exec_cmd(i, argv, envp, 3);
 		}
-
-		outfile_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		//error of outfile open error
-		int cmds_n = argc - 3;
-		int i = 0;
-		int pipe_in = infile_fd;
+		parent_pipe_management_append(fds, pipe_fd, argc, i);
 	}
-	close(outfile_fd);
+	close(fds[1]);
 	while (wait(NULL) > 0);
-	return 0;
 }

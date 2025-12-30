@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/12/30 17:40:04 by rabdolho         ###   ########.fr       */
+/*   Updated: 2025/12/30 20:22:27 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -80,13 +80,13 @@ void	pipe_management(int i, int argc, int *fds, int *pipe_fd)
 	close(fds[1]);
 }
 
-void	exec_cmd(int i, char **argv, char **envp)
+void	exec_cmd(int i, char **argv, char **envp, int offset)
 {
 	char	**cmds;
 	char	**paths;
 	char	*pathname;
 
-	cmds = ft_split(argv[2 + i], ' ');
+	cmds = ft_split(argv[offset + i], ' ');
 	paths = find_paths(envp);
 	pathname = check_access_pathname(paths, cmds[0]);
 	if (!pathname)

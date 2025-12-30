@@ -1,6 +1,7 @@
 NAME		= pipex
 
 SRC		= main.c \
+		append_bonus.c\
 		helper_first.c \
 		helper_second.c \
 		multipipex.c
