@@ -6,17 +6,17 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/12/30 20:13:59 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/01 15:57:43 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
-
-void	multipipex(int argc, char *argv[],char **envp)
+//fds[0] = infile_fd, fds[1] = outfile_fd , fds[2] = pipe_in
+void	multipipex(int argc, char *argv[], char **envp)
 {
 	int	pipe_fd[2];
-	int	fds[3]; //fds[0] = infile_fd, fds[1] = outfile_fd , fds[2] = pipe_in
+	int	fds[3];
 	int	i;
-	pid_t	child_pid;
+	int	child_pid;
 
 	file_opening(fds, argc, argv);
 	i = -1;
@@ -35,5 +35,6 @@ void	multipipex(int argc, char *argv[],char **envp)
 		parent_pipe_management(fds, pipe_fd, argc, i);
 	}
 	close(fds[1]);
-	while (wait(NULL) > 0);
+	while (wait(NULL) > 0)
+		continue ;
 }

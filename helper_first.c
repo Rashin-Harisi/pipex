@@ -6,14 +6,14 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/12/30 20:22:27 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/01 15:53:08 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
 
 char	**find_paths(char **envp)
 {
-	int	i;
+	int		i;
 	char	*path;
 	char	**paths;
 
@@ -21,19 +21,19 @@ char	**find_paths(char **envp)
 	paths = NULL;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i],"PATH=", 5) == 0)
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
 			path = envp[i] + 5;
 			paths = ft_split(path, ':');
 		}
-		i++;	  
+		i++;
 	}
 	return (paths);
 }
 
 char	*check_access_pathname(char **paths, char *cmd)
 {
-	int	i;
+	int		i;
 	char	*temp;
 	char	*pathname;
 
@@ -41,7 +41,7 @@ char	*check_access_pathname(char **paths, char *cmd)
 	while (paths[i])
 	{
 		temp = ft_strjoin(paths[i], "/");
-		pathname = ft_strjoin(temp , cmd);
+		pathname = ft_strjoin(temp, cmd);
 		free(temp);
 		if (access(pathname, F_OK | X_OK) == 0)
 			return (pathname);
@@ -51,7 +51,7 @@ char	*check_access_pathname(char **paths, char *cmd)
 	return (NULL);
 }
 
-void free_array(char **s)
+void	free_array(char **s)
 {
 	int	i;
 
@@ -65,9 +65,10 @@ void free_array(char **s)
 	}
 	free(s);
 }
+
 void	pipe_management(int i, int argc, int *fds, int *pipe_fd)
 {
-	dup2(fds[2] , 0);
+	dup2(fds[2], 0);
 	if (i < argc - 4)
 	{
 		dup2(pipe_fd[1], 1);

@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 10:01:53 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/12/26 11:43:58 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/01 16:01:24 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef LIBFT_H
@@ -88,9 +88,9 @@ char		*sign_nbr_handler_decimal(char *sign, int n, t_flags *flags);
 int			width_handler_decimal(t_flags *flags, int *zero_precision,
 				int length, char sign);
 void		sign_zero_handler_decimal(char sign, int *total_length,
-			int *zero_precision);
+				int *zero_precision);
 void		no_flags_minus_decimal(t_flags *flags, int *width,
-			int *total_length, char *sign);
+				int *total_length, char *sign);
 void		yes_flags_minus_decimal(int *width, int *total_length);
 char		*ft_utoa(unsigned int n);
 void		print_unsigned(unsigned int n, t_flags *flags, int *total_length);
