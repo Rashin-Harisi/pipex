@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/01 15:56:02 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/05 12:02:23 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -19,9 +19,9 @@ int	main(int argc, char *argv[], char **envp)
 	{
 		if (argc < 6)
 			return (write(2, "Not enough data\n", 16));
-		append(argc, argv, envp);
+		return (append(argc, argv, envp));
 	}
 	else
-		multipipex(argc, argv, envp);
+		return (multipipex(argc, argv, envp));
 	return (0);
 }

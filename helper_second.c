@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/01 15:54:33 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/05 12:24:08 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -32,8 +32,13 @@ void	file_opening(int *fds, int argc, char **argv)
 {
 	fds[0] = open(argv[1], O_RDONLY);
 	fds[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fds[0] == -1 || fds[1] == -1)
-		exit_error("Error in opening files", fds, NULL);
+	if (fds[0] == -1)
+		perror(argv[1]);
+	if (fds[1] == -1)
+	{
+		perror(argv[argc - 1]);
+		exit(1);
+	}
 	fds[2] = fds[0];
 }
 

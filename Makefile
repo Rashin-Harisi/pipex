@@ -27,6 +27,8 @@ $(LIBFT):
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+bonus : all
+
 clean:
 	rm -f $(OBJ)
 	$(MAKE) clean -C $(LIBFT_PATH)

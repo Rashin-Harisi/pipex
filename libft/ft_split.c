@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.c      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 09:41:45 by rabdolho          #+#    #+#             */
-/*   Updated: 2025/10/14 14:08:54 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/05 10:14:30 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
@@ -104,7 +104,7 @@ char	**ft_split(char const *s, char c)
 			break ;
 		ptr[i_ptr] = copy_handler(&index, s, c);
 		if (ptr[i_ptr] == NULL)
-			free_handler(ptr, &i_ptr);
+			return (free_handler(ptr, &i_ptr));
 		i_ptr++;
 	}
 	ptr[i_ptr] = NULL;

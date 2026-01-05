@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/01 15:53:08 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/05 12:32:57 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -14,21 +14,15 @@
 char	**find_paths(char **envp)
 {
 	int		i;
-	char	*path;
-	char	**paths;
 
 	i = 0;
-	paths = NULL;
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-		{
-			path = envp[i] + 5;
-			paths = ft_split(path, ':');
-		}
+			return (ft_split(envp[i] + 5, ':'));
 		i++;
 	}
-	return (paths);
+	return (NULL);
 }
 
 char	*check_access_pathname(char **paths, char *cmd)
@@ -43,7 +37,7 @@ char	*check_access_pathname(char **paths, char *cmd)
 		temp = ft_strjoin(paths[i], "/");
 		pathname = ft_strjoin(temp, cmd);
 		free(temp);
-		if (access(pathname, F_OK | X_OK) == 0)
+		if (access(pathname, X_OK) == 0)
 			return (pathname);
 		free(pathname);
 		i++;
@@ -88,18 +82,27 @@ void	exec_cmd(int i, char **argv, char **envp, int offset)
 	char	*pathname;
 
 	cmds = ft_split(argv[offset + i], ' ');
-	paths = find_paths(envp);
-	pathname = check_access_pathname(paths, cmds[0]);
-	if (!pathname)
+	if (!cmds || !cmds[0])
+		exit(0);
+	if (ft_strchr(cmds[0], '/'))
+		pathname = ft_strdup(cmds[0]);
+	else
+	{
+		paths = find_paths(envp);
+		pathname = check_access_pathname(paths, cmds[0]);
+		free_array(paths);
+	}
+	if (!pathname || access(pathname, X_OK) != 0)
 	{
 		free_array(cmds);
-		free_array(paths);
 		write(2, "Command not found!\n", 19);
+		if (pathname)
+			free(pathname);
 		exit(127);
 	}
 	execve(pathname, cmds, envp);
+	perror("execve");
 	free(pathname);
 	free_array(cmds);
-	free_array(paths);
-	exit(1);
+	exit(126);
 }
