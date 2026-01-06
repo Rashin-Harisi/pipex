@@ -5,7 +5,8 @@ SRC		= main.c \
 		helper_first.c \
 		helper_second.c \
 		multipipex.c\
-		helper_bonus.c
+		helper_bonus.c\
+		cmds_split.c
 
 OBJ		= $(SRC:.c=.o)
 

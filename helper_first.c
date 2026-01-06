@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/05 12:32:57 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/06 15:05:15 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -78,26 +78,18 @@ void	pipe_management(int i, int argc, int *fds, int *pipe_fd)
 void	exec_cmd(int i, char **argv, char **envp, int offset)
 {
 	char	**cmds;
-	char	**paths;
 	char	*pathname;
 
-	cmds = ft_split(argv[offset + i], ' ');
+	cmds = cmds_split(argv[offset + i], ' ');
 	if (!cmds || !cmds[0])
 		exit(0);
-	if (ft_strchr(cmds[0], '/'))
-		pathname = ft_strdup(cmds[0]);
-	else
-	{
-		paths = find_paths(envp);
-		pathname = check_access_pathname(paths, cmds[0]);
-		free_array(paths);
-	}
+	pathname = get_path(cmds[0], envp);
 	if (!pathname || access(pathname, X_OK) != 0)
 	{
-		free_array(cmds);
-		write(2, "Command not found!\n", 19);
 		if (pathname)
 			free(pathname);
+		command_error(cmds[0]);
+		free_array(cmds);
 		exit(127);
 	}
 	execve(pathname, cmds, envp);

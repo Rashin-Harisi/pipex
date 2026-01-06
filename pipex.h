@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 14:49:15 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/05 12:04:52 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/06 15:17:27 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef PIPEX_H
@@ -35,5 +35,10 @@ void	pipe_management_append(int i, int argc, int *fds, int *pipe_fd);
 void	parent_pipe_management_append(int *fds, int *pipe_fd, int argc, int i);
 void	file_opening_append(int *fds, char **argv, int argc);
 int		append(int argc, char *argv[], char **envp);
+void	command_error(char *cmd);
+int		wait_all(int last_pid);
+char	*get_path(char *cmd, char **envp);
+void	trim_cmds(char **cmds);
+char	**cmds_split(char *cmd, char c);
 
 #endif
