@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/06 15:05:15 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/10 17:32:43 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -83,6 +83,11 @@ void	exec_cmd(int i, char **argv, char **envp, int offset)
 	cmds = cmds_split(argv[offset + i], ' ');
 	if (!cmds || !cmds[0])
 		exit(0);
+	dprintf(2, "DEBUG: cmds[0] is %s\n", cmds[0]);
+	if (cmds[1])
+		dprintf(2, "DEBUG: cmds[1] is %s\n", cmds[1]);
+	else
+		dprintf(2, "DEBUG: cmds[1] is NULL\n");
 	pathname = get_path(cmds[0], envp);
 	if (!pathname || access(pathname, X_OK) != 0)
 	{
@@ -90,7 +95,10 @@ void	exec_cmd(int i, char **argv, char **envp, int offset)
 			free(pathname);
 		command_error(cmds[0]);
 		free_array(cmds);
-		exit(127);
+		if (!pathname)
+			exit(127);
+		if (access(pathname, X_OK) != 0)
+			exit(126);
 	}
 	execve(pathname, cmds, envp);
 	perror("execve");

@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 12:23:26 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/06 15:30:56 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/10 17:35:27 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -111,6 +111,8 @@ char	**cmds_split(char *cmd, char c)
 			return (free_cmds(cmds, &i), NULL);
 		cmd_leng = get_cmd_len(cmd, c);
 		cmd += cmd_leng;
+		if (!*cmd)
+			break ;
 		i++;
 	}
 	cmds[i] = NULL;

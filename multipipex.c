@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/06 15:26:57 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/10 17:30:57 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -42,26 +42,37 @@ int	wait_all(int last_pid)
 	return (exit_code);
 }
 
+char	*trim_helper(char *str)
+{
+	size_t	len;
+	char	*new;
+
+	if (!str)
+		return (NULL);
+	len = ft_strlen(str);
+	if (len >= 2 && ((str[0] == '\'' || str[0] == '\"') && str[len - 1] == str[0]))
+	{
+		new = ft_substr(str, 1, len - 2);
+		if (new)
+		{
+			free(str);
+			return (new);
+		}
+	}
+	return (str);
+}
+
 void	trim_cmds(char **cmds)
 {
-	int		i;
-	char	*temp;
+	int	i;
 
 	i = 0;
+	if (!cmds)
+		return ;
 	while (cmds[i])
 	{
-		if (cmds[i][0] == '\'')
-		{
-			temp = ft_strtrim(cmds[i], "\'");
-			free(cmds[i]);
-			cmds[i] = temp;
-		}
-		else if (cmds[i][0] == '\"')
-		{
-			temp = ft_strtrim(cmds[i], "\"");
-			free(cmds[i]);
-			cmds[i] = temp;
-		}
+		cmds[i] = trim_helper(cmds[i]);
+		cmds[i] = trim_helper(cmds[i]);
 		i++;
 	}
 }
