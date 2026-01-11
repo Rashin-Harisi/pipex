@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/11 15:02:32 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/11 20:13:01 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -77,12 +77,29 @@ void	pipe_management(int i, int argc, int *fds, int *pipe_fd)
 	close(fds[1]);
 }
 
+char	**prepare_cmds(char *command)
+{
+	char	**cmds;
+
+	if (ft_strchr(command, '/') && access(command, X_OK) == 0)
+	{
+		cmds = malloc(2 * (sizeof(char)));
+		if (!cmds)
+			return (NULL);
+		cmds[0] = ft_strdup(command);
+		cmds[1] = '\0';
+	}
+	else
+		cmds = cmds_split(command, ' ');
+	return (cmds);
+}
+
 void	exec_cmd(int i, char **argv, char **envp, int offset)
 {
 	char	**cmds;
 	char	*pathname;
 
-	cmds = cmds_split(argv[offset + i], ' ');
+	cmds = prepare_cmds(argv[offset + i]);
 	if (!cmds || !cmds[0])
 		exit(0);
 //	dprintf(2, "DEBUG: cmds[0] is %s\n", cmds[0]);
