@@ -6,10 +6,10 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/05 17:28:07 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/11 14:06:53 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "pipex.h"
+#include "../pipex.h"
 // fds[0] = infile_fd , fds[1]= outfile_fd , fds[2] =pipe_in
 // pids[0] = child_pid , pids[1] = last_pid
 int	append(int argc, char *argv[], char **envp)

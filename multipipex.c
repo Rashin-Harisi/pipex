@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/10 17:30:57 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/11 15:02:52 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -46,20 +46,31 @@ char	*trim_helper(char *str)
 {
 	size_t	len;
 	char	*new;
+	int	i;
+	int	j;
 
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);
+	i = 0;
+	j = 0;
+	new = malloc((len + 1) * sizeof(char));
+	if (!new)
+		return (str);
 	if (len >= 2 && ((str[0] == '\'' || str[0] == '\"') && str[len - 1] == str[0]))
 	{
-		new = ft_substr(str, 1, len - 2);
-		if (new)
-		{
-			free(str);
-			return (new);
-		}
+		i = 1;
+		len = len - 1;
 	}
-	return (str);
+	while (i < (int)len)
+	{
+		if (str[i] == '\\' && str[i + 1])
+			i++;
+		new[j++] = str[i++];
+	}
+	new[j] = '\0';
+	free(str);
+	return (new);
 }
 
 void	trim_cmds(char **cmds)
@@ -71,6 +82,7 @@ void	trim_cmds(char **cmds)
 		return ;
 	while (cmds[i])
 	{
+//		dprintf(2, "BEFORE TRIM: [%s]\n", cmds[i]);
 		cmds[i] = trim_helper(cmds[i]);
 		cmds[i] = trim_helper(cmds[i]);
 		i++;
@@ -100,7 +112,8 @@ int	multipipex(int argc, char *argv[], char **envp)
 			pipe_management(i, argc, fds, pipe_fd);
 			exec_cmd(i, argv, envp, 2);
 		}
-		parent_pipe_management(fds, pipe_fd, argc, i);
+		else
+			parent_pipe_management(fds, pipe_fd, argc, i);
 	}
 	close(fds[1]);
 	return (wait_all(pids[1]));

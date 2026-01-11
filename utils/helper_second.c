@@ -6,10 +6,10 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/05 16:35:39 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/11 14:08:04 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "pipex.h"
+#include "../pipex.h"
 
 void	exit_error(char *str, int *fds, int *pipe_fd)
 {
@@ -40,10 +40,15 @@ void	file_opening(int *fds, int argc, char **argv)
 	fds[0] = open(argv[1], O_RDONLY);
 	fds[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1)
+	{
 		perror(argv[1]);
+		fds[0] = open("/dev/null", O_RDONLY);
+	}
 	if (fds[1] == -1)
 	{
 		perror(argv[argc - 1]);
+		if (fds[0] != -1)
+			close(fds[0]);
 		exit(1);
 	}
 	fds[2] = fds[0];

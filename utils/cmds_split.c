@@ -6,10 +6,10 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 12:23:26 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/10 17:35:27 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/11 14:07:33 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "pipex.h"
+#include "../pipex.h"
 
 int	count_cmds(char	*cmd, char c)
 {
@@ -28,11 +28,16 @@ int	count_cmds(char	*cmd, char c)
 		q = 0;
 		while (cmd[i] && (cmd[i] != c || q))
 		{
-			if ((cmd[i] == '\'' || cmd[i] == '\"') && !q)
-				q = cmd[i];
-			else if (cmd[i] == q)
-				q = 0;
-			i++;
+			if (cmd[i] == '\\' && cmd[i + 1])
+				i += 2;
+			else
+			{
+				if ((cmd[i] == '\'' || cmd[i] == '\"') && !q)
+					q = cmd[i];
+				else if (cmd[i] == q)
+					q = 0;
+				i++;
+			}
 		}
 	}
 	return (count);
@@ -47,11 +52,16 @@ int	get_cmd_len(char *cmd, char c)
 	q = 0;
 	while (cmd[i] && (cmd[i] != c || q))
 	{
-		if ((cmd[i] == '\'' || cmd[i] == '\"') && !q)
-			q = cmd[i];
-		else if (cmd[i] == q)
-			q = 0;
-		i++;
+		if (cmd[i] == '\\' && cmd[i + 1])
+			i += 2;
+		else
+		{
+			if ((cmd[i] == '\'' || cmd[i] == '\"') && !q)
+				q = cmd[i];
+			else if (cmd[i] == q)
+				q = 0;
+			i++;
+		}
 	}
 	return (i);
 }
@@ -111,8 +121,6 @@ char	**cmds_split(char *cmd, char c)
 			return (free_cmds(cmds, &i), NULL);
 		cmd_leng = get_cmd_len(cmd, c);
 		cmd += cmd_leng;
-		if (!*cmd)
-			break ;
 		i++;
 	}
 	cmds[i] = NULL;

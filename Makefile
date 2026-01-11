@@ -1,14 +1,20 @@
 NAME		= pipex
+BONUS_NAME	= .bonus_state
 
-SRC		= main.c \
-		append_bonus.c\
-		helper_first.c \
-		helper_second.c \
+COMMON_SRC	= utils/helper_first.c \
+		utils/helper_second.c \
 		multipipex.c\
-		helper_bonus.c\
-		cmds_split.c
+		utils/cmds_split.c
 
-OBJ		= $(SRC:.c=.o)
+MANDATORY_SRC	= main.c
+
+BONUS_SRC	= bonus/main_bonus.c\
+		bonus/append_bonus.c\
+		bonus/helper_bonus.c
+
+MANDATORY_OBJ	= $(MANDATORY_SRC:.c=.o)
+COMMON_OBJ	= $(COMMON_SRC:.c=.o)
+BONUS_OBJ	= $(BONUS_SRC:.c=.o)
 
 LIBFT_PATH	= ./libft
 LIBFT		= libft.a
@@ -18,8 +24,18 @@ CFLAGS		= -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+$(NAME): $(LIBFT) $(MANDATORY_OBJ) $(COMMON_OBJ)
+	@rm -f $(BONUS_NAME)
+	$(CC) $(CFLAGS) $(MANDATORY_OBJ) $(COMMON_OBJ) $(LIBFT) -o $(NAME)
+	@echo "Pipex Mandatory compiled"
+
+bonus: $(BONUS_NAME)
+
+$(BONUS_NAME):$(LIBFT) $(BONUS_OBJ) $(COMMON_OBJ)
+	@rm -f $(NAME) $(MANDATORY_OBJ)
+	$(CC) $(CFLAGS) $(BONUS_OBJ) $(COMMON_OBJ) $(LIBFT) -o $(NAME)
+	@touch $(BONUS_NAME)
+	@echo "Pipex Bonus compiled"
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
@@ -28,10 +44,8 @@ $(LIBFT):
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-bonus : all
-
 clean:
-	rm -f $(OBJ)
+	rm -f $(COMMON_OBJ) $(MANDATORY_OBJ) $(BONUS_OBJ) $(BONUS_NAME)
 	$(MAKE) clean -C $(LIBFT_PATH)
 
 fclean: clean
