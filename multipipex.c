@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/11 15:02:52 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/12 10:48:13 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -82,9 +82,12 @@ void	trim_cmds(char **cmds)
 		return ;
 	while (cmds[i])
 	{
-//		dprintf(2, "BEFORE TRIM: [%s]\n", cmds[i]);
 		cmds[i] = trim_helper(cmds[i]);
-		cmds[i] = trim_helper(cmds[i]);
+		if (!cmds[i])
+		{
+			free_array(cmds);
+			exit(0);
+		}
 		i++;
 	}
 }

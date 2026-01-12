@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 12:23:26 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/11 14:07:33 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/12 11:01:49 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -23,8 +23,9 @@ int	count_cmds(char	*cmd, char c)
 	{
 		while (cmd[i] == c)
 			i++;
-		if (cmd[i])
-			count++;
+		if (!cmd[i])
+			break ;
+		count++;
 		q = 0;
 		while (cmd[i] && (cmd[i] != c || q))
 		{
@@ -34,7 +35,7 @@ int	count_cmds(char	*cmd, char c)
 			{
 				if ((cmd[i] == '\'' || cmd[i] == '\"') && !q)
 					q = cmd[i];
-				else if (cmd[i] == q)
+				else if (q && cmd[i] == q)
 					q = 0;
 				i++;
 			}
@@ -115,7 +116,10 @@ char	**cmds_split(char *cmd, char c)
 		while (*cmd == c)
 			cmd++;
 		if (!*cmd)
-			break ;
+		{
+			free_array(cmds);
+			exit(1);
+		}
 		cmds[i] = copy_cmd(cmd, c);
 		if (!cmds[i])
 			return (free_cmds(cmds, &i), NULL);
