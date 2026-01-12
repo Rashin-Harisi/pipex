@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 11:09:52 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/12 17:42:22 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -40,6 +40,7 @@ void	file_opening(int *fds, int argc, char **argv)
 	fds[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1)
 	{
+		ft_putstr_fd("pipex: line 1: ",2);
 		perror(argv[1]);
 		fds[0] = open("/dev/null", O_RDONLY);
 	}
@@ -64,10 +65,16 @@ void	open_pipe(int *pipe_fd, int *fds)
 
 void	parent_pipe_management(int *fds, int *pipe_fd, int argc, int i)
 {
-	close(fds[2]);
+//	int	old_fd;
+
+//	old_fd = fds[2];
 	if (i < argc - 4)
 	{
 		close(pipe_fd[1]);
 		fds[2] = pipe_fd[0];
 	}
+//	else
+//		fds[2] = -1;
+//	if (old_fd != -1)
+//		close(old_fd);
 }

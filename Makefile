@@ -3,10 +3,13 @@ BONUS_NAME	= .bonus_state
 
 COMMON_SRC	= utils/helper_first.c \
 		utils/helper_second.c \
-		multipipex.c\
-		utils/cmds_split.c
+		utils/helper_third.c\
+		utils/helper_fourth.c\
+		utils/cmds_split.c\
+		utils/helper_cmds_split.c
 
-MANDATORY_SRC	= main.c
+MANDATORY_SRC	= main.c\
+		multipipex.c
 
 BONUS_SRC	= bonus/main_bonus.c\
 		bonus/append_bonus.c\

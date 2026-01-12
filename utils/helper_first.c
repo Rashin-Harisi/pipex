@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 10:57:43 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/12 16:57:52 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -16,6 +16,8 @@ char	**find_paths(char **envp)
 	int		i;
 
 	i = 0;
+	if (!envp || !envp[0])
+		return (NULL);
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
@@ -75,50 +77,4 @@ void	pipe_management(int i, int argc, int *fds, int *pipe_fd)
 		dup2(fds[1], 1);
 	close(fds[2]);
 	close(fds[1]);
-}
-
-char	**prepare_cmds(char *command)
-{
-	char	**cmds;
-
-	if (ft_strchr(command, '/') && access(command, X_OK) == 0)
-	{
-		cmds = malloc(2 * (sizeof(char *)));
-		if (!cmds)
-			return (NULL);
-		cmds[0] = ft_strdup(command);
-		cmds[1] = NULL;
-	}
-	else
-		cmds = cmds_split(command, ' ');
-	return (cmds);
-}
-
-void	exec_cmd(int i, char **argv, char **envp, int offset)
-{
-	char	**cmds;
-	char	*pathname;
-
-	cmds = prepare_cmds(argv[offset + i]);
-	if (!cmds)
-		exit(0);
-	if (!cmds[0])
-	{
-		free_array(cmds);
-		exit(0);
-	}
-	pathname = get_path(cmds[0], envp);
-	if (!pathname || access(pathname, X_OK) != 0)
-	{
-		command_error(cmds[0]);
-		free_array(cmds);
-		if (pathname)
-			free(pathname);
-		exit(127);
-	}
-	execve(pathname, cmds, envp);
-	perror("execve");
-	free(pathname);
-	free_array(cmds);
-	exit(126);
 }

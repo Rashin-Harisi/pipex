@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 14:49:15 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/06 15:17:27 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/12 15:55:25 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef PIPEX_H
@@ -40,5 +40,8 @@ int		wait_all(int last_pid);
 char	*get_path(char *cmd, char **envp);
 void	trim_cmds(char **cmds);
 char	**cmds_split(char *cmd, char c);
-
+void	skip_word(int *i, char *cmd, char c);
+int		count_cmds(char *cmd, char c);
+int		get_cmd_len(char *cmd, char c);
+char	*copy_cmd(char *cmd, char c);
 #endif

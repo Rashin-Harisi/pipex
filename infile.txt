@@ -1,3 +1,0 @@
-hello world And this is my test.
-And this is the test2
-But here is the test3
