@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 14:44:38 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/12 20:03:52 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
@@ -18,7 +18,7 @@ int	multipipex(int argc, char *argv[], char **envp)
 	int	i;
 	int	pids[2];
 
-	file_opening(fds, argc, argv);
+	file_opening(fds, argc, argv, envp);
 	i = -1;
 	while (++i < argc - 3)
 	{

@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 17:42:22 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/13 11:55:20 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -30,18 +30,22 @@ void	exit_error(char *str, int *fds, int *pipe_fd)
 
 void	command_error(char *cmd)
 {
+	ft_putstr_fd("pipex: line 1: ",2);
 	ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": command not found\n", 2);
 }
 
-void	file_opening(int *fds, int argc, char **argv)
+void	file_opening(int *fds, int argc, char **argv, char **envp)
 {
 	fds[0] = open(argv[1], O_RDONLY);
 	fds[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fds[0] == -1)
 	{
-		ft_putstr_fd("pipex: line 1: ",2);
-		perror(argv[1]);
+		if (envp && *envp)
+		{
+			ft_putstr_fd("pipex: line 1: ",2);
+			perror(argv[1]);
+		}
 		fds[0] = open("/dev/null", O_RDONLY);
 	}
 	if (fds[1] == -1)
@@ -65,16 +69,13 @@ void	open_pipe(int *pipe_fd, int *fds)
 
 void	parent_pipe_management(int *fds, int *pipe_fd, int argc, int i)
 {
-//	int	old_fd;
-
-//	old_fd = fds[2];
+	if (fds[2] != 0)
+		close(fds[2]);
 	if (i < argc - 4)
 	{
 		close(pipe_fd[1]);
 		fds[2] = pipe_fd[0];
 	}
-//	else
-//		fds[2] = -1;
-//	if (old_fd != -1)
-//		close(old_fd);
+	else
+		fds[2] = -1;
 }

@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 14:49:15 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 15:55:25 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/12 20:07:45 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef PIPEX_H
@@ -25,7 +25,7 @@ void	free_array(char **s);
 void	pipe_management(int i, int argc, int *fds, int *pipe_fd);
 void	exec_cmd(int i, char **argv, char **envp, int offset);
 void	exit_error(char *str, int *fds, int *pipe_fd);
-void	file_opening(int *fds, int argc, char **argv);
+void	file_opening(int *fds, int argc, char **argv, char **envp);
 void	open_pipe(int *pipe_fd, int *fds);
 void	parent_pipe_management(int *fds, int *pipe_fd, int argc, int i);
 int		multipipex(int argc, char *argv[], char **envp);

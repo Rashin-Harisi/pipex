@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 17:12:36 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/13 11:01:25 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -21,7 +21,7 @@ char	*get_path(char *cmd, char **envp)
 		return (ft_strdup(cmd));
 	paths = find_paths(envp);
 	if (!paths)
-		return (NULL);
+		paths = ft_split("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", ':');
 	path = check_access_pathname(paths, cmd);
 	free_array(paths);
 	return (path);

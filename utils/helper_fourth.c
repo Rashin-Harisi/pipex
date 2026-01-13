@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 17:25:03 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/13 12:31:37 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -42,16 +42,20 @@ void	exec_cmd(int i, char **argv, char **envp, int offset)
 		exit(0);
 	}
 	pathname = get_path(cmds[0], envp);
-	if (!pathname || access(pathname, X_OK) != 0)
+	if (!pathname)
 	{
-		if (envp && *envp)
 		command_error(cmds[0]);
 		free_array(cmds);
-		if (pathname)
-			free(pathname);
-		if (argv[offset + i + 1] == NULL)
+		if (argv[offset + i + 2] == NULL)
 			exit(127);
 		exit(0);
+	}
+	if (access(pathname, X_OK) != 0)
+	{
+		perror(cmds[0]);
+		free(pathname);
+		free_array(cmds);
+		exit(126);
 	}
 	execve(pathname, cmds, envp);
 	perror("execve");
