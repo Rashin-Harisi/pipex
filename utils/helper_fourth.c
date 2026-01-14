@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/13 12:31:37 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/14 10:10:00 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -28,6 +28,21 @@ char	**prepare_cmds(char *command)
 	return (cmds);
 }
 
+void	cleanup_exec_cmd(char *pathname, char **cmds, char **argv, int status)
+{
+	if (status == 127)
+		command_error(cmds[0]);
+	else if (status == 126 && pathname)
+		perror(cmds[0]);
+	if (pathname)
+		free(pathname);
+	if (cmds)
+		free_array(cmds);
+	if (argv == NULL)
+		exit(126);
+	exit(status);
+}
+
 void	exec_cmd(int i, char **argv, char **envp, int offset)
 {
 	char	**cmds;
@@ -44,22 +59,13 @@ void	exec_cmd(int i, char **argv, char **envp, int offset)
 	pathname = get_path(cmds[0], envp);
 	if (!pathname)
 	{
-		command_error(cmds[0]);
-		free_array(cmds);
 		if (argv[offset + i + 2] == NULL)
-			exit(127);
-		exit(0);
+			cleanup_exec_cmd(NULL, cmds, argv, 127);
+		cleanup_exec_cmd(NULL, cmds, argv, 0);
 	}
 	if (access(pathname, X_OK) != 0)
-	{
-		perror(cmds[0]);
-		free(pathname);
-		free_array(cmds);
-		exit(126);
-	}
+		cleanup_exec_cmd(pathname, cmds, argv, 126);
 	execve(pathname, cmds, envp);
 	perror("execve");
-	free(pathname);
-	free_array(cmds);
-	exit(126);
+	cleanup_exec_cmd(pathname, cmds, NULL, 126);
 }
