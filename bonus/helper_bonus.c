@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 20:07:04 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/15 11:48:37 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -38,7 +38,7 @@ void	get_first_command(int fd_read, char *limiter, int fd_write)
 	char	*line;
 
 	line = ft_strdup("");
-	write(1, "codehere>", 9);
+	write(2, "codehere>", 9);
 	while (read(fd_read, buf, 1) > 0)
 	{
 		if (buf[0] == '\n')
@@ -53,7 +53,7 @@ void	get_first_command(int fd_read, char *limiter, int fd_write)
 			write(fd_write, "\n", 1);
 			free(line);
 			line = ft_strdup("");
-			write(1, "codehere>", 9);
+			write(2, "codehere>", 9);
 		}
 		else
 			line = ft_strjoin_char(line, buf[0]);

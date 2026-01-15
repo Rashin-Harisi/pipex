@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/14 10:10:00 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/15 14:09:19 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -33,7 +33,9 @@ void	cleanup_exec_cmd(char *pathname, char **cmds, char **argv, int status)
 	if (status == 127)
 		command_error(cmds[0]);
 	else if (status == 126 && pathname)
+	{
 		perror(cmds[0]);
+	}
 	if (pathname)
 		free(pathname);
 	if (cmds)
