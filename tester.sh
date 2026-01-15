@@ -11,7 +11,7 @@ RESET="\033[0m"
 
 run_test() {
     desc="$1"
-    cmd="$2"
+="$2"
 
     echo -e "\n🔹 $desc"
     echo "$ cmd: $cmd"
@@ -41,8 +41,49 @@ compare_stderr() {
 
 echo "Hello
 Hello world
+Ans this is a test
 42" > $IN
 
+#PACO_LOGS
+run_test "Paco logs" \
+"< $IN cat | wc > bash_out"
+$PIPEX $IN "cat" "wc" pipex_out
+compare
+
+run_test "Substitution command" \
+"< $IN sed 's/And/But/' | grep But > bash_out"
+$PIPEX $IN  'sed "s/And/But"' 'grep But' pipex_out
+compare
+
+run_test "AWK" \
+"< $IN sed 's/And/But' | awk '{count++} END {print count}' > bash_out"
+$PIPEX $IN 'sed "s/And/But/"' 'awk '"'"'{count++} END {print count}'"'"'' pipex_out
+compare
+
+run_test "AWK_2" \
+"< $IN sed 's/And/But' | awk '{count++} END {print count}' > bash_out"
+$PIPEX $IN 'sed "s/And/But/"' 'awk "{count++} END {print count}"' pipex_out
+compare
+
+run_test "AWK_3" \
+'< $IN sed "s/And/But/" | awk "{count++} END {printf \"count: %i\" , count}" > bash_out'
+$PIPEX $IN 'sed "s/And/But/"' 'awk "{count++} END {printf \"count: %i\" , count}"' pipex_out
+compare 
+
+run_test "AWK_4" \
+"< $IN sed 's/And/But/' | awk '{count++} END {printf 'count: %i', count}' > bash_out"
+$PIPEX $IN 'sed "s/And/But/"' 'awk '"'"'{count++} END {printf "count: %i", count}'"'"'' pipex_out
+compare
+
+run_test "script" \
+"< $IN ./script.sh | wc > bash_out"
+$PIPEX $IN "./script.sh" "wc" pipex_out
+compare
+
+run_test "script_2" \
+"< $IN ./script space.sh | wc > bash_out"
+$PIPEX $IN "./script space.sh" "wc" pipex_out
+compare
 # BASIC
 run_test "Basic pipe" \
 "< $IN grep Hello | wc -l > bash_out"
@@ -133,4 +174,5 @@ valgrind --leak-check=full --show-leak-kinds=all \
 ./pipex here_doc EOF "cat" "wc -l" outfile.txt
 
 rm -f bash_out pipex_out bash_err pipex_err infile.txt outfile.txt heredoc_out.txt
+
 
