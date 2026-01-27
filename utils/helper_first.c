@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/12 16:57:52 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/27 15:56:39 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -44,6 +44,7 @@ char	*check_access_pathname(char **paths, char *cmd)
 		free(pathname);
 		i++;
 	}
+	command_error(cmd);
 	return (NULL);
 }
 
