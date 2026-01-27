@@ -128,9 +128,17 @@ run_test "Outfile permission denied" \
 "< $IN grep Hello | wc -l > locked 2> bash_err"
 $PIPEX $IN "grep Hello" "wc -l" locked 2> pipex_err
 
-compare_stderr
+compare
 chmod 644 locked
 rm -f locked
+
+# NOT ENV
+run_test "Not env"
+rm -f bash_out pipex_out bash_err pipex_err
+env -i PATH= ./pipex infile.txt cat cat pipex_out 2> pipex_err
+env -i PATH= /bin/bash --noprofile --norc -c '< infile.txt cat | cat > bash_out 2> bash_err'
+
+compare
 
 # MULTI PIPE
 run_test "Multiple pipes" \
