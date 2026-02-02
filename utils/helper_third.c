@@ -21,7 +21,8 @@ char	*get_path(char *cmd, char **envp)
 		return (ft_strdup(cmd));
 	paths = find_paths(envp);
 	if (!paths)
-		paths = ft_split("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", ':');
+		return (NULL);
+		//paths = ft_split("/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin", ':');
 	path = check_access_pathname(paths, cmd);
 	free_array(paths);
 	return (path);

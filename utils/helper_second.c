@@ -6,7 +6,7 @@
 /*   By: rabdolho <rabdolho@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 08:53:06 by rabdolho          #+#    #+#             */
-/*   Updated: 2026/01/15 13:14:12 by rabdolho         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:33:46 by rabdolho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../pipex.h"
@@ -30,9 +30,18 @@ void	exit_error(char *str, int *fds, int *pipe_fd)
 
 void	command_error(char *cmd)
 {
-	ft_putstr_fd("pipex: ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	char	*temp;
+	char	*message;
+
+	temp = ft_strjoin("pipex: ", cmd);
+	if (!temp)
+		return ;
+	message = ft_strjoin(temp, ": command not found\n");
+	free(temp);
+	if (!message)
+		return ;
+	write(2, message, ft_strlen(message));
+	free(message);
 }
 
 void	file_opening(int *fds, int argc, char **argv, char **envp)
@@ -50,6 +59,7 @@ void	file_opening(int *fds, int argc, char **argv, char **envp)
 	}
 	if (fds[1] == -1)
 	{
+		ft_putstr_fd("pipex: ", 2);
 		perror(argv[argc - 1]);
 		if (fds[0] != -1)
 			close(fds[0]);
