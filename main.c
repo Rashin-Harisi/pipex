@@ -13,10 +13,11 @@
 
 int	main(int argc, char *argv[], char **envp)
 {
-	if (argc < 5)
-	{
-		ft_putstr_fd("Usage: ./pipex infile cmd1 cmd2 outfile\n", 2);
-		return (1);
-	}
-	return (multipipex(argc, argv, envp));
+	if (argc ==  5)
+            multipipex(argc, argv, envp);
+    else
+    {
+        ft_putstr_fd("Usage: ./pipex infile cmd1 cmd2 outfile\n", 2);
+        return (1);
+    }
 }
