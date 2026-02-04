@@ -1,5 +1,6 @@
 NAME		= pipex
 BONUS_NAME	= .bonus_state
+HEADER      = pipex.h libft/libft.h
 
 COMMON_SRC	= utils/helper_first.c \
 		utils/helper_second.c \
@@ -44,7 +45,7 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
 	cp $(LIBFT_PATH)/libft.a .
 
-%.o: %.c
+%.o: %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
